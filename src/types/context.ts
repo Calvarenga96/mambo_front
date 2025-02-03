@@ -34,4 +34,10 @@ export interface ContextInitialState {
     openDialog: boolean;
     setOpenDialog: Dispatch<SetStateAction<boolean>>;
     handleCancel: () => void;
+    errors: {
+        name?: string;
+        description?: string;
+        selectedStatus?: string;
+        selectedUser?: string;
+    };
 }

@@ -2,8 +2,15 @@ import { useLogin } from "@/hooks/useLogin";
 import { Box, Button, Heading, Input, Text, VStack } from "@chakra-ui/react";
 
 const LoginForm = () => {
-    const { email, setEmail, password, setPassword, handleLogin, loading } =
-        useLogin();
+    const {
+        email,
+        setEmail,
+        password,
+        setPassword,
+        handleFormSubmit,
+        loading,
+        errors,
+    } = useLogin();
 
     return (
         <Box
@@ -33,6 +40,9 @@ const LoginForm = () => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                         />
+                        {errors.email && (
+                            <Text color="red">{errors.email}</Text>
+                        )}
                     </Box>
 
                     <Box width="full">
@@ -43,13 +53,16 @@ const LoginForm = () => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
+                        {errors.password && (
+                            <Text color="red">{errors.password}</Text>
+                        )}
                     </Box>
 
                     <Box width="full">
                         <Button
                             colorScheme="blue"
                             w="full"
-                            onClick={handleLogin}
+                            onClick={handleFormSubmit}
                             loading={loading}
                         >
                             Ingresar

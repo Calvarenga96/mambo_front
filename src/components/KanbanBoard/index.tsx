@@ -4,6 +4,7 @@ import Dialog from "../Dialog";
 import TasksTable from "../TasksTable";
 import { useEffect } from "react";
 import { useAppContext } from "@/context/AppContext";
+import LogoutButton from "../LogoutButton";
 
 const KanbanBoard = () => {
     const {
@@ -23,7 +24,9 @@ const KanbanBoard = () => {
 
     return (
         <VStack align="stretch" p={4}>
-            <Box display="flex" w="100%" justifyContent="flex-end">
+            <Box display="flex" w="100%" justifyContent="space-between">
+                <LogoutButton />
+
                 <Dialog
                     trigger={
                         <Button onClick={() => setOpenDialog(true)}>

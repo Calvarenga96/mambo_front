@@ -1,5 +1,6 @@
 import { createTask, getTasks, getTaskStatuses, getUsers } from "@/api";
 import { toaster } from "@/components/ui/toaster";
+import { createTaskSchema } from "@/schemas/createTaskSchema";
 import { Task, TaskStatus, User } from "@/types/api";
 import { ChildrenPropType, ContextInitialState } from "@/types/context";
 import {
@@ -23,6 +24,12 @@ export const AppProvider = ({ children }: ChildrenPropType) => {
     const [selectedStatus, setSelectedStatus] = useState("");
     const [selectedUser, setSelectedUser] = useState("");
     const [openDialog, setOpenDialog] = useState(false);
+    const [errors, setErrors] = useState<{
+        name?: string;
+        description?: string;
+        selectedStatus?: string;
+        selectedUser?: string;
+    }>({});
 
     const dialogRef = useRef<HTMLDivElement | null>(null);
 
@@ -33,35 +40,56 @@ export const AppProvider = ({ children }: ChildrenPropType) => {
         setSelectedUser("");
     };
 
+    const validateForm = () => {
+        const result = createTaskSchema.safeParse({
+            name,
+            description,
+            selectedStatus,
+            selectedUser,
+        });
+
+        if (!result.success) {
+            const newErrors: { [key: string]: string } = {};
+            result.error.errors.forEach((err) => {
+                newErrors[err.path[0]] = err.message;
+            });
+            setErrors(newErrors);
+            return false;
+        }
+        setErrors({});
+        return true;
+    };
+
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
-        setIsLoading(true);
-
-        try {
-            await createTask({
-                name,
-                description,
-                statusId: parseInt(selectedStatus),
-                userId: parseInt(selectedUser),
-            });
-            toaster.create({
-                title: "Tarea creada",
-                description: "La tarea se ha añadido correctamente.",
-                type: "success",
-                duration: 3000,
-            });
-            resetValues();
-            fetchTasks();
-        } catch (error: any) {
-            toaster.create({
-                title: "Error",
-                description: error.message || "No se pudo crear la tarea.",
-                type: "error",
-                duration: 3000,
-            });
-        } finally {
-            setIsLoading(false);
-            setOpenDialog(false);
+        if (validateForm()) {
+            setIsLoading(true);
+            try {
+                await createTask({
+                    name,
+                    description,
+                    statusId: parseInt(selectedStatus),
+                    userId: parseInt(selectedUser),
+                });
+                toaster.create({
+                    title: "Tarea creada",
+                    description: "La tarea se ha añadido correctamente.",
+                    type: "success",
+                    duration: 3000,
+                });
+                resetValues();
+                fetchTasks();
+            } catch (error: any) {
+                toaster.create({
+                    title: "Error",
+                    description: error.message || "No se pudo crear la tarea.",
+                    type: "error",
+                    duration: 3000,
+                });
+            } finally {
+                setIsLoading(false);
+                setOpenDialog(false);
+            }
         }
     };
 
@@ -111,6 +139,7 @@ export const AppProvider = ({ children }: ChildrenPropType) => {
 
     const handleCancel = () => {
         setOpenDialog(false);
+        setErrors({});
         resetValues();
     };
 
@@ -139,6 +168,7 @@ export const AppProvider = ({ children }: ChildrenPropType) => {
                 openDialog,
                 setOpenDialog,
                 handleCancel,
+                errors,
             }}
         >
             {children}

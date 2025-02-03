@@ -1,5 +1,6 @@
 import axios from "axios";
 import { TaskPayload, TaskStatus, UpdateTaskPayload } from "./types/api";
+import Cookies from "js-cookie";
 
 const API_URL = "http://localhost:8000/api/v1";
 
@@ -37,15 +38,20 @@ export const login = async ({
 }) => {
     try {
         const body = { email, password };
-        const response = await axios.post(
-            `http://localhost:8000/login`,
-            body,
-            axiosConfig,
-        );
-        console.log(response);
-        return response;
+        return await axios.post(`${API_URL}/login`, body, axiosConfig);
     } catch (error) {
         errorHandler({ error, message: "No se pudo iniciar sesión" });
+    }
+};
+
+export const logout = async () => {
+    try {
+        const response = await axios.post(`${API_URL}/logout`, {}, axiosConfig);
+        Cookies.remove("XSRF-TOKEN");
+        Cookies.remove("laravel_session");
+        return response;
+    } catch (error) {
+        errorHandler({ error, message: "No se pudo cerrar sesión" });
     }
 };
 
@@ -144,5 +150,14 @@ export const getUsers = async () => {
         return response.data;
     } catch (error) {
         errorHandler({ error, message: "No se pudieron obtener los usuarios" });
+    }
+};
+
+export const getUser = async () => {
+    try {
+        const response = await axios.get(`${API_URL}/user`, axiosConfig);
+        return response.data;
+    } catch (error) {
+        errorHandler({ error, message: "No se pudieron obtener el usuario" });
     }
 };

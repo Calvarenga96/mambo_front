@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Box, Button, Input, Text, VStack } from "@chakra-ui/react";
+import { Box, Input, Text, VStack } from "@chakra-ui/react";
 import Select from "../Select";
 import { useAppContext } from "@/context/AppContext";
 
@@ -16,6 +16,7 @@ const CreateTaskForm = () => {
         setSelectedStatus,
         selectedUser,
         setSelectedUser,
+        errors,
     } = useAppContext();
 
     useEffect(() => {
@@ -32,6 +33,7 @@ const CreateTaskForm = () => {
                         onChange={(e) => setName(e.target.value)}
                         placeholder="Nombre de la tarea"
                     />
+                    {errors.name && <Text color="red">{errors.name}</Text>}
                 </Box>
 
                 <Box>
@@ -41,6 +43,9 @@ const CreateTaskForm = () => {
                         onChange={(e) => setDescription(e.target.value)}
                         placeholder="Descripción de la tarea"
                     />
+                    {errors.description && (
+                        <Text color="red">{errors.description}</Text>
+                    )}
                 </Box>
 
                 <Box>
@@ -53,6 +58,9 @@ const CreateTaskForm = () => {
                             label: status?.description,
                         }))}
                     />
+                    {errors.selectedStatus && (
+                        <Text color="red">{errors.selectedStatus}</Text>
+                    )}
                 </Box>
 
                 <Box>
@@ -65,6 +73,9 @@ const CreateTaskForm = () => {
                             label: user?.name,
                         }))}
                     />
+                    {errors.selectedUser && (
+                        <Text color="red">{errors.selectedUser}</Text>
+                    )}
                 </Box>
             </VStack>
         </Box>

@@ -36,21 +36,15 @@ const Task = ({ id, name, description, statusId }: TaskProps) => {
                         </Badge>
                     </Box>
 
-                    <Box display="flex" gap={2}>
-                        <Button size="xs" color="green" variant="subtle">
-                            Ver más
-                        </Button>
-
-                        <Button
-                            size="xs"
-                            color="red"
-                            variant="subtle"
-                            loading={deletingTask}
-                            onClick={() => handleDeleteTask({ taskId: id })}
-                        >
-                            Eliminar
-                        </Button>
-                    </Box>
+                    <Button
+                        size="xs"
+                        color="red"
+                        variant="subtle"
+                        loading={deletingTask}
+                        onClick={() => handleDeleteTask({ taskId: id })}
+                    >
+                        Eliminar
+                    </Button>
                 </Box>
 
                 <Box
