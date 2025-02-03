@@ -7,7 +7,7 @@ import {
 } from "react";
 import { Task, TaskStatus, User } from "./api";
 
-export interface AppProviderProps {
+export interface ChildrenPropType {
     children: ReactNode;
 }
 

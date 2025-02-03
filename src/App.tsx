@@ -1,21 +1,22 @@
-import { Box, Container, Heading } from "@chakra-ui/react";
-import KanbanBoard from "./components/KanbanBoard";
-import { AppProvider } from "./context/AppContext";
-import { Toaster } from "./components/ui/toaster";
+import { Route, Routes, Navigate } from "react-router";
+import Kanban from "./pages/Kanban";
+import Login from "./pages/Login";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 
 function App() {
     return (
-        <Container>
-            <Box display="flex" justifyContent="center" py={4}>
-                <Heading>Mambo Kanban</Heading>
-            </Box>
-
-            <AppProvider>
-                <KanbanBoard />
-            </AppProvider>
-
-            <Toaster />
-        </Container>
+        <Routes>
+            <Route index element={<Navigate to="/login" />} />
+            <Route path="/login" element={<Login />} />
+            <Route
+                path="/kanban"
+                element={
+                    <ProtectedRoute>
+                        <Kanban />
+                    </ProtectedRoute>
+                }
+            />
+        </Routes>
     );
 }
 

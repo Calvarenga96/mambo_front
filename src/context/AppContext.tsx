@@ -1,7 +1,7 @@
 import { createTask, getTasks, getTaskStatuses, getUsers } from "@/api";
 import { toaster } from "@/components/ui/toaster";
 import { Task, TaskStatus, User } from "@/types/api";
-import { AppProviderProps, ContextInitialState } from "@/types/context";
+import { ChildrenPropType, ContextInitialState } from "@/types/context";
 import {
     createContext,
     FormEvent,
@@ -13,7 +13,7 @@ import {
 
 const AppContext = createContext<ContextInitialState | null>(null);
 
-export const AppProvider = ({ children }: AppProviderProps) => {
+export const AppProvider = ({ children }: ChildrenPropType) => {
     const [taskStatusesList, setTaskStatusesList] = useState<TaskStatus[]>([]);
     const [usersList, setUsersList] = useState<User[]>([]);
     const [tasksList, setTasksList] = useState<Task[]>([]);
@@ -52,10 +52,10 @@ export const AppProvider = ({ children }: AppProviderProps) => {
             });
             resetValues();
             fetchTasks();
-        } catch (error) {
+        } catch (error: any) {
             toaster.create({
                 title: "Error",
-                description: "No se pudo crear la tarea.",
+                description: error.message || "No se pudo crear la tarea.",
                 type: "error",
                 duration: 3000,
             });
@@ -69,8 +69,14 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         try {
             const data = await getTaskStatuses();
             setTaskStatusesList(data);
-        } catch (error) {
-            console.error("Error al obtener estados de tareas:", error);
+        } catch (error: any) {
+            toaster.create({
+                title: "Error",
+                description:
+                    error.message || "Error al obtener estados de tareas",
+                type: "error",
+                duration: 3000,
+            });
         }
     }, []);
 
@@ -78,19 +84,30 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         try {
             const data = await getUsers();
             setUsersList(data);
-        } catch (error) {
-            console.error("Error al obtener estados de tareas:", error);
+        } catch (error: any) {
+            toaster.create({
+                title: "Error",
+                description:
+                    error.message || "Error al obtener la lista de usuarios",
+                type: "error",
+                duration: 3000,
+            });
         }
     }, []);
 
-    const fetchTasks = async () => {
+    const fetchTasks = useCallback(async () => {
         try {
             const data = await getTasks();
             setTasksList(data);
-        } catch (error) {
-            console.error("Error al obtener tareas:", error);
+        } catch (error: any) {
+            toaster.create({
+                title: "Error",
+                description: error.message || "Error al obtener las tareas",
+                type: "error",
+                duration: 3000,
+            });
         }
-    };
+    }, []);
 
     const handleCancel = () => {
         setOpenDialog(false);
