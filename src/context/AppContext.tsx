@@ -8,6 +8,7 @@ import {
     FormEvent,
     useCallback,
     useContext,
+    useEffect,
     useRef,
     useState,
 } from "react";
@@ -142,6 +143,11 @@ export const AppProvider = ({ children }: ChildrenPropType) => {
         setErrors({});
         resetValues();
     };
+
+    useEffect(() => {
+        fetchTasks();
+        fetchTaskStatusesList();
+    }, []);
 
     return (
         <AppContext.Provider

@@ -1,12 +1,18 @@
 import KanbanBoard from "@/components/KanbanBoard";
 import { Toaster } from "@/components/ui/toaster";
 import { AppProvider } from "@/context/AppContext";
-import { Box, Container, Heading } from "@chakra-ui/react";
+import { Box, Heading } from "@chakra-ui/react";
 
 export default function Kanban() {
     return (
-        <Container>
-            <Box display="flex" justifyContent="center" py={4}>
+        <Box>
+            <Box
+                display="flex"
+                justifyContent="center"
+                py={4}
+                borderBottom="1px solid"
+                width="100%"
+            >
                 <Heading>Mambo Kanban</Heading>
             </Box>
 
@@ -15,6 +21,6 @@ export default function Kanban() {
             </AppProvider>
 
             <Toaster />
-        </Container>
+        </Box>
     );
 }

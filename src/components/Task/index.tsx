@@ -20,7 +20,13 @@ const Task = ({ id, name, description, statusId }: TaskProps) => {
     };
 
     return (
-        <Box p={4} shadow="md" borderRadius="md" borderWidth="1px">
+        <Box
+            p={4}
+            borderRadius="md"
+            borderWidth="1px"
+            _hover={{ boxShadow: "lg" }}
+            transition="box-shadow 0.2s ease-in-out"
+        >
             <VStack align="start">
                 <Box display="flex" justifyContent="space-between" w="100%">
                     <Box>
@@ -55,7 +61,7 @@ const Task = ({ id, name, description, statusId }: TaskProps) => {
                     mt={1}
                 >
                     <Text fontWeight="bold">Descripción:</Text>
-                    <Text>{description}</Text>
+                    <Text>{description || "-"}</Text>
                 </Box>
 
                 <Box mt={1}>
@@ -68,7 +74,10 @@ const Task = ({ id, name, description, statusId }: TaskProps) => {
                                     {status.id !== statusId && (
                                         <Button
                                             key={status?.id}
-                                            colorScheme="gray"
+                                            color={
+                                                statusColors[status.description]
+                                            }
+                                            variant="outline"
                                             size="sm"
                                             onClick={() =>
                                                 handleStatusChange({
